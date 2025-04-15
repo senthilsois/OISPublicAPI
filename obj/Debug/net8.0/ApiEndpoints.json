@@ -1,0 +1,23 @@
+[
+  {
+    "ContainingType": "OISPublic.Controllers.publicAPIHandler",
+    "Method": "GeneratePublicLinkHandler",
+    "RelativePath": "public_link/{documentId}/{shareId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "documentId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "shareId",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
