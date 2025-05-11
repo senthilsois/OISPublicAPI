@@ -1,5 +1,88 @@
 {
   "Version": 1,
   "ManifestType": "Build",
-  "Endpoints": []
+  "Endpoints": [
+    {
+      "Route": "PublicFolder/a2029c5d-33ad-49eb-8fce-3af8825d03ee..ljsuaov353.pdf",
+      "AssetFile": "PublicFolder/a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "10616940"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AUZ0GeSop+MGz9MPnCtfVKm3tmSAMWbl7mGgcL/dLEQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Apr 2025 05:49:32 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "ljsuaov353"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-AUZ0GeSop+MGz9MPnCtfVKm3tmSAMWbl7mGgcL/dLEQ="
+        },
+        {
+          "Name": "label",
+          "Value": "PublicFolder/a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf"
+        }
+      ]
+    },
+    {
+      "Route": "PublicFolder/a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
+      "AssetFile": "PublicFolder/a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "no-cache"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "10616940"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "application/pdf"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"AUZ0GeSop+MGz9MPnCtfVKm3tmSAMWbl7mGgcL/dLEQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Wed, 23 Apr 2025 05:49:32 GMT"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-AUZ0GeSop+MGz9MPnCtfVKm3tmSAMWbl7mGgcL/dLEQ="
+        }
+      ]
+    }
+  ]
 }

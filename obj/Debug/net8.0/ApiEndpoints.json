@@ -1,8 +1,8 @@
 [
   {
     "ContainingType": "OISPublic.Controllers.publicAPIHandler",
-    "Method": "GeneratePublicLinkHandler",
-    "RelativePath": "public_link/{documentId}/{shareId}",
+    "Method": "GetDataFromExternalApi",
+    "RelativePath": "getDocuments",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -10,10 +10,57 @@
       {
         "Name": "documentId",
         "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "filename",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Byte[]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "OISPublic.Controllers.publicAPIHandler",
+    "Method": "GeneratePublicLinkHandler",
+    "RelativePath": "public_link/{shortCode}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "shortCode",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OISPublic.Controllers.publicAPIHandler",
+    "Method": "verifyProtectPassword",
+    "RelativePath": "public_link/verify/{shortCode}/{password}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "password",
+        "Type": "System.String",
         "IsRequired": true
       },
       {
-        "Name": "shareId",
+        "Name": "shortCode",
         "Type": "System.String",
         "IsRequired": true
       }

@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/public_link/{documentId}/{shareId}": {
+    "/getDocuments": {
       "get": {
         "tags": [
           "publicAPIHandler"
@@ -13,6 +13,54 @@
         "parameters": [
           {
             "name": "documentId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filename",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public_link/verify/{shortCode}/{password}": {
+      "get": {
+        "tags": [
+          "publicAPIHandler"
+        ],
+        "parameters": [
+          {
+            "name": "password",
             "in": "path",
             "required": true,
             "schema": {
@@ -20,7 +68,29 @@
             }
           },
           {
-            "name": "shareId",
+            "name": "shortCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/public_link/{shortCode}": {
+      "get": {
+        "tags": [
+          "publicAPIHandler"
+        ],
+        "parameters": [
+          {
+            "name": "shortCode",
             "in": "path",
             "required": true,
             "schema": {
