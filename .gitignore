@@ -7,3 +7,6 @@
 OISPublic.csproj
 OISPublic.csproj.user
 /wwwroot
+/.vs
+/.vs/OISPublic
+*.vsidx
