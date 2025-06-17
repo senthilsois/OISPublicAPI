@@ -1,26 +1,30 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "D:\\DMS\\OISPublicAPI\\OISPublic\\",
+  "WorkspaceRootPath": "D:\\DMS\\DMS External Link API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\oispublicapi\\oispublic\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\oispublicapi\\oispublic\\controllers\\publicapihandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\dms external link api\\controllers\\publicapihandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|solutionrelative:controllers\\publicapihandler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\oispublicapi\\oispublic\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\dms external link api\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\oispublicapi\\oispublic\\oispublic.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
-      "RelativeMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|solutionrelative:oispublic.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\dms external link api\\controllers\\officeeditorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|solutionrelative:controllers\\officeeditorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\oispublicapi\\oispublic\\oispublic.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\dms external link api\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\dms external link api\\oispublic.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
       "RelativeMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|solutionrelative:oispublic.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|d:\\dms\\dms external link api\\oispublic.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|",
+      "RelativeMoniker": "D:0:0:{FDAAAC85-12D2-415D-BE79-01EC700F7DFE}|OISPublic.csproj|solutionrelative:oispublic.csproj||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,39 +34,58 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Program.cs",
-              "DocumentMoniker": "D:\\DMS\\OISPublicAPI\\OISPublic\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "D:\\DMS\\OISPublicAPI\\OISPublic\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "Title": "OfficeEditorController.cs",
+              "DocumentMoniker": "D:\\DMS\\DMS External Link API\\Controllers\\OfficeEditorController.cs",
+              "RelativeDocumentMoniker": "Controllers\\OfficeEditorController.cs",
+              "ToolTip": "D:\\DMS\\DMS External Link API\\Controllers\\OfficeEditorController.cs",
+              "RelativeToolTip": "Controllers\\OfficeEditorController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAADkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-16T05:14:59.127Z"
+              "WhenOpened": "2025-06-11T10:46:49.142Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "publicAPIHandler.cs",
-              "DocumentMoniker": "D:\\DMS\\OISPublicAPI\\OISPublic\\Controllers\\publicAPIHandler.cs",
-              "RelativeDocumentMoniker": "Controllers\\publicAPIHandler.cs",
-              "ToolTip": "D:\\DMS\\OISPublicAPI\\OISPublic\\Controllers\\publicAPIHandler.cs",
-              "RelativeToolTip": "Controllers\\publicAPIHandler.cs",
-              "ViewState": "AgIAANkAAAAAAAAAAAAnwCkAAAAIAAAAAAAAAA==",
+              "Title": "Program.cs",
+              "DocumentMoniker": "D:\\DMS\\DMS External Link API\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "D:\\DMS\\DMS External Link API\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABwAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-15T07:10:44.67Z"
+              "WhenOpened": "2025-04-16T05:14:59.127Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
+              "Title": "publicAPIHandler.cs",
+              "DocumentMoniker": "D:\\DMS\\DMS External Link API\\Controllers\\publicAPIHandler.cs",
+              "RelativeDocumentMoniker": "Controllers\\publicAPIHandler.cs",
+              "ToolTip": "D:\\DMS\\DMS External Link API\\Controllers\\publicAPIHandler.cs",
+              "RelativeToolTip": "Controllers\\publicAPIHandler.cs",
+              "ViewState": "AgIAABoAAAAAAAAAAAAtwBoAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-15T07:10:44.67Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "OISPublic",
-              "DocumentMoniker": "D:\\DMS\\OISPublicAPI\\OISPublic\\OISPublic.csproj",
+              "DocumentMoniker": "D:\\DMS\\DMS External Link API\\OISPublic.csproj",
               "RelativeDocumentMoniker": "OISPublic.csproj",
-              "ToolTip": "D:\\DMS\\OISPublicAPI\\OISPublic\\OISPublic.csproj",
+              "ToolTip": "D:\\DMS\\DMS External Link API\\OISPublic.csproj",
               "RelativeToolTip": "OISPublic.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2025-04-15T07:08:05.02Z"
@@ -71,23 +94,23 @@
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "OISPublic.csproj",
-              "DocumentMoniker": "D:\\DMS\\OISPublicAPI\\OISPublic\\OISPublic.csproj",
+              "DocumentMoniker": "D:\\DMS\\DMS External Link API\\OISPublic.csproj",
               "RelativeDocumentMoniker": "OISPublic.csproj",
-              "ToolTip": "D:\\DMS\\OISPublicAPI\\OISPublic\\OISPublic.csproj",
+              "ToolTip": "D:\\DMS\\DMS External Link API\\OISPublic.csproj",
               "RelativeToolTip": "OISPublic.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAQAAAAAAAAAAAAkwBgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2025-04-15T07:07:46.458Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
-              "DocumentMoniker": "D:\\DMS\\OISPublicAPI\\OISPublic\\appsettings.json",
+              "DocumentMoniker": "D:\\DMS\\DMS External Link API\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "D:\\DMS\\OISPublicAPI\\OISPublic\\appsettings.json",
+              "ToolTip": "D:\\DMS\\DMS External Link API\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2025-04-15T07:07:41.597Z",
               "EditorCaption": ""

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DMS\\OISPublicAPI\\OISPublic\\OISPublic.csproj": {}
+    "D:\\DMS\\DMS External Link API\\OISPublic.csproj": {}
   },
   "projects": {
-    "D:\\DMS\\OISPublicAPI\\OISPublic\\OISPublic.csproj": {
+    "D:\\DMS\\DMS External Link API\\OISPublic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DMS\\OISPublicAPI\\OISPublic\\OISPublic.csproj",
+        "projectUniqueName": "D:\\DMS\\DMS External Link API\\OISPublic.csproj",
         "projectName": "OISPublic",
-        "projectPath": "D:\\DMS\\OISPublicAPI\\OISPublic\\OISPublic.csproj",
+        "projectPath": "D:\\DMS\\DMS External Link API\\OISPublic.csproj",
         "packagesPath": "C:\\Users\\senth\\.nuget\\packages\\",
-        "outputPath": "D:\\DMS\\OISPublicAPI\\OISPublic\\obj\\",
+        "outputPath": "D:\\DMS\\DMS External Link API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -53,6 +53,26 @@
             "Dapper": {
               "target": "Package",
               "version": "[2.1.66, )"
+            },
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.3.0, )"
+            },
+            "Microsoft.Graph": {
+              "target": "Package",
+              "version": "[5.65.0, )"
+            },
+            "Microsoft.Identity.Web": {
+              "target": "Package",
+              "version": "[3.9.3, )"
+            },
+            "Microsoft.Identity.Web.MicrosoftGraph": {
+              "target": "Package",
+              "version": "[3.9.3, )"
+            },
+            "Microsoft.Identity.Web.UI": {
+              "target": "Package",
+              "version": "[3.9.3, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

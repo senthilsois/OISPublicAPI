@@ -10,3 +10,5 @@ OISPublic.csproj.user
 /.vs
 /.vs/OISPublic
 *.vsidx
+/obj
+/obj

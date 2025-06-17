@@ -1,6 +1,22 @@
 [
   {
     "ContainingType": "OISPublic.Controllers.publicAPIHandler",
+    "Method": "GeneratePublicLinkHandler",
+    "RelativePath": "{shortCode}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "shortCode",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "OISPublic.Controllers.publicAPIHandler",
     "Method": "GetDataFromExternalApi",
     "RelativePath": "getDocuments",
     "HttpMethod": "GET",
@@ -31,15 +47,36 @@
     ]
   },
   {
+    "ContainingType": "OISPublic.Controllers.OfficeEditorController",
+    "Method": "Upload",
+    "RelativePath": "OfficeEditor/upload",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "file",
+        "Type": "Microsoft.AspNetCore.Http.IFormFile",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "OISPublic.Controllers.publicAPIHandler",
-    "Method": "GeneratePublicLinkHandler",
-    "RelativePath": "public_link/{shortCode}",
+    "Method": "StreamDocument",
+    "RelativePath": "stream/{DocumentId}/{FileName}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "shortCode",
+        "Name": "DocumentId",
+        "Type": "System.String",
+        "IsRequired": true
+      },
+      {
+        "Name": "FileName",
         "Type": "System.String",
         "IsRequired": true
       }
@@ -49,7 +86,7 @@
   {
     "ContainingType": "OISPublic.Controllers.publicAPIHandler",
     "Method": "verifyProtectPassword",
-    "RelativePath": "public_link/verify/{shortCode}/{password}",
+    "RelativePath": "verify/{shortCode}/{password}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

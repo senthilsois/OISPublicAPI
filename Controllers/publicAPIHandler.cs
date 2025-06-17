@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Reflection.Metadata;
 namespace OISPublic.Controllers
 {
+    [Route("/")]
     public class publicAPIHandler : Controller
     {
         private readonly IConfiguration _configuration;
@@ -36,14 +37,13 @@ namespace OISPublic.Controllers
             return await response.Content.ReadAsByteArrayAsync(); // Return byte array directly
         }
 
-        [HttpGet]
-            [Route("public_link/verify/{shortCode}/{password}")]
-            public async Task<IActionResult> verifyProtectPassword(string password,string shortCode)
+        [HttpGet("verify/{shortCode}/{password}")]
+        public async Task<IActionResult> verifyProtectPassword(string password, string shortCode)
         {
             string connectionString = _configuration.GetConnectionString("dmsdb_connectionstring");
             try
             {
-                using(SqlConnection connection = new SqlConnection(connectionString))
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand("SELECT PasswordHash FROM DocumentExternalLinkSharing WHERE shortCode=@shortCode", connection))
                     {
@@ -96,9 +96,36 @@ namespace OISPublic.Controllers
 
         }
 
+        [HttpGet("stream/{DocumentId}/{FileName}")]
+        public async Task<IActionResult> StreamDocument(string DocumentId, string FileName)
+        {
+
+
+            byte[] fileBytes = await GetDataFromExternalApi(DocumentId, FileName); // Your existing method
+
+            var mimeType = GetMimeType(Path.GetExtension(FileName));
+            var stream = new MemoryStream(fileBytes);
+
+            return File(stream, mimeType, FileName, enableRangeProcessing: true); // ✅ Streaming enabled
+        }
+        private string GetMimeType(string extension)
+        {
+            return extension.ToLower() switch
+            {
+                ".pdf" => "application/pdf",
+                ".mp4" => "video/mp4",
+                ".mp3" => "audio/mpeg",
+                ".png" => "image/png",
+                ".jpg" => "image/jpeg",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                // Add others...
+                _ => "application/octet-stream"
+            };
+        }
+
+
         //Get API to create the external link
-        [HttpGet]
-        [Route("/public_link/{shortCode}")]
+        [HttpGet("/{shortCode}")]
         public async Task<IActionResult> GeneratePublicLinkHandler(string shortCode)
         {
             string connectionString = _configuration.GetConnectionString("dmsdb_connectionstring");
@@ -131,13 +158,23 @@ namespace OISPublic.Controllers
                                     var fileName = reader["Url"].ToString();
                                     var isProtected = reader["Protected"];
                                     var isAllowDownload = reader["AllowDownload"];
-                                    var documentBytes = await GetDataFromExternalApi(documentId, fileName); // Now returns byte[]
+
+                                    //if (!string.IsNullOrEmpty(fileName) && fileName.Contains('.'))
+                                    //{
+                                    //    documentId = Path.GetFileName(fileName);
+                                    //}
+                                    //else
+                                    //{
+                                    //    documentId = fileName;
+                                    //}
+
 
                                     return Ok(new
                                     {
-                                        DocumentBytes = Convert.ToBase64String(documentBytes),
+                                        DocumentName = fileName,
                                         IsProtected = isProtected,
-                                        IsAllowDownload = isAllowDownload
+                                        IsAllowDownload = isAllowDownload,
+                                        DocumentUrl = Url.Action("StreamDocument", new { documentId, fileName }),
                                     });
                                 }
                             }

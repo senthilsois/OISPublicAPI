@@ -5,6 +5,38 @@
     "version": "1.0"
   },
   "paths": {
+    "/OfficeEditor/upload": {
+      "post": {
+        "tags": [
+          "OfficeEditor"
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/getDocuments": {
       "get": {
         "tags": [
@@ -53,7 +85,7 @@
         }
       }
     },
-    "/public_link/verify/{shortCode}/{password}": {
+    "/verify/{shortCode}/{password}": {
       "get": {
         "tags": [
           "publicAPIHandler"
@@ -83,7 +115,37 @@
         }
       }
     },
-    "/public_link/{shortCode}": {
+    "/stream/{DocumentId}/{FileName}": {
+      "get": {
+        "tags": [
+          "publicAPIHandler"
+        ],
+        "parameters": [
+          {
+            "name": "DocumentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "FileName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/{shortCode}": {
       "get": {
         "tags": [
           "publicAPIHandler"

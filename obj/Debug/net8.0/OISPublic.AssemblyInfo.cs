@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OISPublic")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+634033ee41c29ed7053bad5a110822e732547ceb")]
 [assembly: System.Reflection.AssemblyProductAttribute("OISPublic")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OISPublic")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

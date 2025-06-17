@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "qSqFYCwMRFhzwNyebh7KMZkjVJyGh1KUmhTBKJ5V9ig=",
+  "Hash": "tSMGQXDQ2YNS2rYSp5bM1mpPoEZFbUoUWSnDFEHGTMc=",
   "Source": "OISPublic",
   "BasePath": "_content/OISPublic",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "OISPublic\\wwwroot",
       "Source": "OISPublic",
-      "ContentRoot": "D:\\DMS\\OISPublicAPI\\OISPublic\\wwwroot\\",
+      "ContentRoot": "D:\\DMS\\DMS External Link API\\wwwroot\\",
       "BasePath": "_content/OISPublic",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "D:\\DMS\\OISPublicAPI\\OISPublic\\wwwroot\\PublicFolder\\a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
+      "Identity": "D:\\DMS\\DMS External Link API\\wwwroot\\PublicFolder\\a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
       "SourceId": "OISPublic",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\DMS\\OISPublicAPI\\OISPublic\\wwwroot\\",
+      "ContentRoot": "D:\\DMS\\DMS External Link API\\wwwroot\\",
       "BasePath": "_content/OISPublic",
       "RelativePath": "PublicFolder/a2029c5d-33ad-49eb-8fce-3af8825d03ee.#[.{fingerprint}]?.pdf",
       "AssetKind": "All",
@@ -41,7 +41,7 @@
   "Endpoints": [
     {
       "Route": "PublicFolder/a2029c5d-33ad-49eb-8fce-3af8825d03ee..ljsuaov353.pdf",
-      "AssetFile": "D:\\DMS\\OISPublicAPI\\OISPublic\\wwwroot\\PublicFolder\\a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
+      "AssetFile": "D:\\DMS\\DMS External Link API\\wwwroot\\PublicFolder\\a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
@@ -86,7 +86,7 @@
     },
     {
       "Route": "PublicFolder/a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
-      "AssetFile": "D:\\DMS\\OISPublicAPI\\OISPublic\\wwwroot\\PublicFolder\\a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
+      "AssetFile": "D:\\DMS\\DMS External Link API\\wwwroot\\PublicFolder\\a2029c5d-33ad-49eb-8fce-3af8825d03ee..pdf",
       "Selectors": [],
       "ResponseHeaders": [
         {
