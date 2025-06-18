@@ -115,22 +115,14 @@
         }
       }
     },
-    "/stream/{DocumentId}/{FileName}": {
+    "/stream/{shortCode}": {
       "get": {
         "tags": [
           "publicAPIHandler"
         ],
         "parameters": [
           {
-            "name": "DocumentId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "FileName",
+            "name": "shortCode",
             "in": "path",
             "required": true,
             "schema": {
@@ -157,6 +149,14 @@
             "required": true,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "metaData",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],

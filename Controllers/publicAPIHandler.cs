@@ -96,17 +96,27 @@ namespace OISPublic.Controllers
 
         }
 
-        [HttpGet("stream/{DocumentId}/{FileName}")]
-        public async Task<IActionResult> StreamDocument(string DocumentId, string FileName)
+        [HttpGet("stream/{shortCode}")]
+        public async Task<IActionResult> StreamDocument(string shortCode)
         {
+            var result = await GeneratePublicLinkHandler(shortCode, 1) as OkObjectResult;
 
+            if (result?.Value is not null)
+            {
+                dynamic data = result.Value;
 
-            byte[] fileBytes = await GetDataFromExternalApi(DocumentId, FileName); // Your existing method
+                if (data.DocumentId != null && data.DocumentName != null)
+                {
+                    byte[] fileBytes = await GetDataFromExternalApi(data.DocumentId.ToString(), data.DocumentName.ToString());
 
-            var mimeType = GetMimeType(Path.GetExtension(FileName));
-            var stream = new MemoryStream(fileBytes);
+                    var mimeType = GetMimeType(Path.GetExtension(data.DocumentName.ToString()));
+                    var stream = new MemoryStream(fileBytes);
 
-            return File(stream, mimeType, FileName, enableRangeProcessing: true); // ✅ Streaming enabled
+                    return File(stream, mimeType, data.DocumentName.ToString(), enableRangeProcessing: true); // ✅ Streaming enabled
+                }
+            }
+
+            return BadRequest(new { error = "Invalid short code or document data." });
         }
         private string GetMimeType(string extension)
         {
@@ -126,12 +136,13 @@ namespace OISPublic.Controllers
 
         //Get API to create the external link
         [HttpGet("/{shortCode}")]
-        public async Task<IActionResult> GeneratePublicLinkHandler(string shortCode)
+        public async Task<IActionResult> GeneratePublicLinkHandler(string shortCode, int metaData)
         {
             string connectionString = _configuration.GetConnectionString("dmsdb_connectionstring");
 
             try
             {
+                
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand("InsertDocumentAuditData", connection))
@@ -171,11 +182,12 @@ namespace OISPublic.Controllers
 
                                     return Ok(new
                                     {
+                                        DocumentId = metaData == 1 ? documentId : null,
                                         DocumentName = fileName,
                                         IsProtected = isProtected,
                                         IsAllowDownload = isAllowDownload,
-                                        DocumentUrl = Url.Action("StreamDocument", new { documentId, fileName }),
-                                    });
+                                        DocumentUrl = Url.Action("StreamDocument", new { shortCode })
+                                    }); 
                                 }
                             }
                         }

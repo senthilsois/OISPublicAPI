@@ -11,6 +11,11 @@
         "Name": "shortCode",
         "Type": "System.String",
         "IsRequired": true
+      },
+      {
+        "Name": "metaData",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -65,18 +70,13 @@
   {
     "ContainingType": "OISPublic.Controllers.publicAPIHandler",
     "Method": "StreamDocument",
-    "RelativePath": "stream/{DocumentId}/{FileName}",
+    "RelativePath": "stream/{shortCode}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "DocumentId",
-        "Type": "System.String",
-        "IsRequired": true
-      },
-      {
-        "Name": "FileName",
+        "Name": "shortCode",
         "Type": "System.String",
         "IsRequired": true
       }
