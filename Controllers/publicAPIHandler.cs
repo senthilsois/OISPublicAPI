@@ -118,20 +118,54 @@ namespace OISPublic.Controllers
 
             return BadRequest(new { error = "Invalid short code or document data." });
         }
+        //private string GetMimeType(string extension)
+        //{
+        //    return extension.ToLower() switch
+        //    {
+        //        ".pdf" => "application/pdf",
+        //        ".mp4" => "video/mp4",
+        //        ".mp3" => "audio/mpeg",
+        //        ".png" => "image/png",
+        //        ".jpg" => "image/jpeg",
+        //        ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+
+        //        _ => "application/octet-stream"
+        //    };
+        //}
         private string GetMimeType(string extension)
         {
             return extension.ToLower() switch
             {
-                ".pdf" => "application/pdf",
-                ".mp4" => "video/mp4",
-                ".mp3" => "audio/mpeg",
-                ".png" => "image/png",
                 ".jpg" => "image/jpeg",
+                ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                ".svg" => "image/svg",
+                ".doc" => "application/msword",
                 ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                // Add others...
+                ".xls" => "application/vnd.ms-excel",
+                ".xlsx" => "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                ".ppt" => "application/vnd.ms-powerpoint",
+                ".pptx" => "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                ".pdf" => "application/pdf",
+                ".mp3" => "audio/mpeg",
+                ".wav" => "audio/wav",
+                ".ogg" => "audio/ogg",
+                ".m4a" => "audio/mp4",
+                ".aac" => "audio/aac",
+                ".flac" => "audio/flac",
+                ".mp4" => "video/mp4",
+                ".avi" => "video/x-msvideo",
+                ".mov" => "video/quicktime",
+                ".wmv" => "video/x-ms-wmv",
+                ".flv" => "video/x-flv",
+                ".mkv" => "video/x-matroska",
+                ".webm" => "video/webm",
+                ".txt" => "text/plain",
                 _ => "application/octet-stream"
             };
         }
+
 
 
         //Get API to create the external link
@@ -142,7 +176,6 @@ namespace OISPublic.Controllers
 
             try
             {
-                
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
                     using (SqlCommand command = new SqlCommand("InsertDocumentAuditData", connection))
@@ -165,34 +198,31 @@ namespace OISPublic.Controllers
                                 else if (reader.HasColumn("DocumentId") && reader.HasColumn("DocumentName"))
                                 {
                                     // Handle success case
-                                    var documentId = reader["DocumentId"].ToString();
-                                    var fileName = reader["Url"].ToString();
+                                    var documentId = reader["DocumentId"]?.ToString();
+                                    var fileName = reader["Url"]?.ToString();
+                                    var documentName = reader["DocumentName"]?.ToString();
                                     var isProtected = reader["Protected"];
                                     var isAllowDownload = reader["AllowDownload"];
 
-                                    //if (!string.IsNullOrEmpty(fileName) && fileName.Contains('.'))
-                                    //{
-                                    //    documentId = Path.GetFileName(fileName);
-                                    //}
-                                    //else
-                                    //{
-                                    //    documentId = fileName;
-                                    //}
-
+                                    // Fix for CS8602: Ensure documentName is not null before calling Contains
+                                    if (!string.IsNullOrEmpty(documentName) && !documentName.Contains('.'))
+                                    {
+                                        documentName += Path.GetExtension(fileName);
+                                    }
 
                                     return Ok(new
                                     {
                                         DocumentId = metaData == 1 ? documentId : null,
-                                        DocumentName = fileName,
+                                        DocumentName = documentName,
                                         IsProtected = isProtected,
                                         IsAllowDownload = isAllowDownload,
                                         DocumentUrl = Url.Action("StreamDocument", new { shortCode })
-                                    }); 
+                                    });
                                 }
                             }
-                        }
 
-                        return StatusCode(500, new { error = "Unexpected response from stored procedure." });
+                            return StatusCode(500, new { error = "Unexpected response from stored procedure." });
+                        }
                     }
                 }
             }
