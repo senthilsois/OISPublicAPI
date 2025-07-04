@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\DMS\\DMS External Link API\\OISPublic.csproj": {}
+    "C:\\Users\\Admin\\Documents\\GitHub\\OISPublicAPI\\OISPublic.csproj": {}
   },
   "projects": {
-    "D:\\DMS\\DMS External Link API\\OISPublic.csproj": {
+    "C:\\Users\\Admin\\Documents\\GitHub\\OISPublicAPI\\OISPublic.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\DMS\\DMS External Link API\\OISPublic.csproj",
+        "projectUniqueName": "C:\\Users\\Admin\\Documents\\GitHub\\OISPublicAPI\\OISPublic.csproj",
         "projectName": "OISPublic",
-        "projectPath": "D:\\DMS\\DMS External Link API\\OISPublic.csproj",
-        "packagesPath": "C:\\Users\\senth\\.nuget\\packages\\",
-        "outputPath": "D:\\DMS\\DMS External Link API\\obj\\",
+        "projectPath": "C:\\Users\\Admin\\Documents\\GitHub\\OISPublicAPI\\OISPublic.csproj",
+        "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Admin\\Documents\\GitHub\\OISPublicAPI\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\senth\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,6 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,8 +40,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.200"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -54,9 +50,27 @@
               "target": "Package",
               "version": "[2.1.66, )"
             },
+            "Google.Apis.Drive.v3": {
+              "target": "Package",
+              "version": "[1.69.0.3783, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.5, )"
+            },
             "Microsoft.AspNetCore.Http": {
               "target": "Package",
               "version": "[2.3.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.6, )"
             },
             "Microsoft.Graph": {
               "target": "Package",
@@ -73,6 +87,10 @@
             "Microsoft.Identity.Web.UI": {
               "target": "Package",
               "version": "[3.9.3, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
@@ -102,7 +120,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
