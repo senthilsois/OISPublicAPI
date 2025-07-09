@@ -6,13 +6,13 @@ namespace OISPublic.OISDataRoom;
 
 public partial class OISDataRoomContext : DbContext
 {
-    public OISDataRoomContext()
-    {
-    }
 
-    public OISDataRoomContext(DbContextOptions<OISDataRoomContext> options)
+    private readonly IConfiguration _configuration;
+
+    public OISDataRoomContext(DbContextOptions<OISDataRoomContext> options, IConfiguration configuration)
         : base(options)
     {
+        _configuration = configuration;
     }
 
     public virtual DbSet<AggregatedCounter> AggregatedCounters { get; set; }
@@ -197,7 +197,7 @@ public partial class OISDataRoomContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("data source=DESKTOP-AVT5418\\SQLEXPRESS01;initial catalog=GM_DMS;user id=sa;password=12345;MultipleActiveResultSets=True;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer(_configuration.GetConnectionString("dmsdb_connectionstring"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
