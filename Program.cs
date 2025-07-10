@@ -7,6 +7,7 @@ using System.Text;
 using OISPublic.Services;
 using DocumentManagement.Helper;
 using Microsoft.Graph.Models.ExternalConnectors;
+using OISPublic.Helper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,12 +84,32 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<PathHelper>();
+builder.Services.AddSignalR();
+builder.Services.AddHostedService<NotificationWatcherService>();
+builder.Services.AddScoped<NotificationService>();
+
+
 var app = builder.Build();
 
 // Enable Swagger in all environments
+app.UseStaticFiles();
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+});
 
+app.Use(async (context, next) =>
+{
+  if(context.Request.Path == "/")
+    {
+
+        context.Response.Redirect("/swagger/index.html");
+        return;
+
+    }
+    await next();
+});
 
 
 app.UseCors("AllowAll");
@@ -98,6 +119,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationHub>("/hubs/notifications");
 
 app.Run();
 builder.Services.AddDbContext<OISDataRoomContext>((serviceProvider, options) =>

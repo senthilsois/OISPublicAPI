@@ -34,6 +34,7 @@ public partial class OISDataRoomContext : DbContext
     public virtual DbSet<DailyReminder> DailyReminders { get; set; }
 
     public virtual DbSet<DataRoom> DataRooms { get; set; }
+    public virtual DbSet<DataRoomNotification> DataRoomNotifications { get; set; }
 
     public virtual DbSet<DataRoomAuditTrial> DataRoomAuditTrials { get; set; }
 

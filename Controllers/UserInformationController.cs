@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using OISPublic.Helper;
 using OISPublic.OISDataRoom;
 using OISPublic.Services;
 using System;
@@ -15,15 +17,21 @@ namespace OISPublic.Controllers
         private readonly OISDataRoomContext _context;
         private readonly JwtTokenService _jwtTokenService;
         private readonly IConfiguration _configuration;
+        private readonly IHubContext<NotificationHub> _hubContext;
+        private readonly NotificationService _notificationService;
 
         public UserInformationController(
             OISDataRoomContext context,
             IConfiguration configuration,
-            JwtTokenService jwtTokenService)
+            JwtTokenService jwtTokenService,
+              IHubContext<NotificationHub> hubContext,
+              NotificationService notificationService)
         {
             _context = context;
             _configuration = configuration;
             _jwtTokenService = jwtTokenService;
+            _hubContext = hubContext;
+            _notificationService = notificationService;
         }
 
         [HttpGet("UserInfo/{id}")]
@@ -170,6 +178,49 @@ namespace OISPublic.Controllers
             return Ok(new { message = "Password updated successfully." });
         }
 
+        [HttpGet("UserNotification/{userId}")]
+        public async Task<IActionResult> GetUserNotifications(Guid userId)
+        {
+            var notifications = await _context.DataRoomNotifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+
+            // Notify the user's group
+            await _hubContext.Clients.Group(userId.ToString()).SendAsync("NotificationUpdated", new
+            {
+                Count = notifications.Count,
+                Timestamp = DateTime.UtcNow
+            });
+
+            return Ok(notifications);
+        }
+
+        //[HttpGet("UserNotification/{userId}")]
+        //public async Task<IActionResult> GetUserNotifications(Guid userId)
+        //{
+        //    var notifications = await _notificationService.SendUserNotificationsAsync(userId);
+        //    return Ok(notifications);
+        //}
+
+
+        public class MarkAsReadDto
+        {
+            public bool IsRead { get; set; }
+        }
+
+        [HttpPut("MarkAsRead/{notificationId}")]
+        public async Task<IActionResult> MarkAsRead(Guid notificationId, [FromBody] MarkAsReadDto dto)
+        {
+            var notification = await _context.DataRoomNotifications.FindAsync(notificationId);
+            if (notification == null) return NotFound();
+
+            notification.IsRead = dto.IsRead;
+            notification.ReadAt = dto.IsRead ? DateTime.UtcNow : null;
+
+            await _context.SaveChangesAsync();
+            return Ok();
+        }
 
 
     }
