@@ -92,7 +92,11 @@ namespace OISPublic.Controllers
        })
        .ToListAsync();
 
-
+            var companyNames = allDataRooms
+     .Where(dr => !string.IsNullOrWhiteSpace(dr.CompanyName))
+     .Select(dr => dr.CompanyName)
+     .Distinct()
+     .ToList();
             return Ok(new
             {
                 User = new
@@ -106,6 +110,7 @@ namespace OISPublic.Controllers
                     masterUser.ClientId,
                     masterUser.CompanyId
                 },
+                CompanyNames = companyNames,
                 TotalDocuments = documents.Count(),      
                 TotalDataRooms = allDataRooms.Count(),   
                 ActiveDataRooms = activeRooms.Select(r => new

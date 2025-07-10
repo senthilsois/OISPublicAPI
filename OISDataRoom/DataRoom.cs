@@ -35,7 +35,7 @@ public partial class DataRoom
 
     public int Storage { get; set; }
 
-
+    public string? CompanyName { get; set; }
     public ICollection<DataRoomUser> DataRoomUsers { get; set; }
     public ICollection<DataRoomFile> DataRoomFiles { get; set; }
 }
