@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using OISPublic.Helper;
 using OISPublic.OISDataRoom;
 using OISPublic.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using static OISPublic.Helper.AesEncryptionHelper;
 
 namespace OISPublic.Controllers
 {
@@ -97,7 +99,13 @@ namespace OISPublic.Controllers
      .Select(dr => dr.CompanyName)
      .Distinct()
      .ToList();
-            return Ok(new
+
+
+
+
+
+
+            var result = new
             {
                 User = new
                 {
@@ -134,8 +142,12 @@ namespace OISPublic.Controllers
                     r.CompanyId
                 }),
                 Documents = documents
-            });
+            };
 
+            string json = JsonConvert.SerializeObject(result);
+            EncryptedResult encrypted = AesEncryptionHelper.EncryptWithRandomKey(json);
+
+            return Ok(encrypted);
         }
 
 
@@ -198,7 +210,12 @@ namespace OISPublic.Controllers
                 Timestamp = DateTime.UtcNow
             });
 
-            return Ok(notifications);
+            //return Ok(notifications);
+
+            string json = JsonConvert.SerializeObject(notifications);
+            EncryptedResult encrypted = AesEncryptionHelper.EncryptWithRandomKey(json);
+
+            return Ok(encrypted);
         }
 
         //[HttpGet("UserNotification/{userId}")]
