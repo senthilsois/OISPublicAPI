@@ -32,4 +32,6 @@ public partial class DataRoomMasterUser
     public int? CompanyId { get; set; }
 
     public string? Token { get; set; }
+
+    public string? ProfilePicturePath { get; set; }
 }

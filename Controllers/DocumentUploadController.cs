@@ -282,6 +282,15 @@ namespace OISPublic.Controllers
                 });
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fullPath"></param>
+        /// <param name="fileData"></param>
+        /// <returns></returns>
+        /// 
+
+        [HttpGet("Encrypt")]
 
         private async Task EncryptFileByPart(string fullPath, byte[] fileData)
         {

@@ -6,8 +6,6 @@ namespace OISPublic.Helper
     public static class AesEncryptionHelper
     {
   
-        private static readonly string MasterKey = "your-32-byte-static-key-123456789012";
-        private static readonly string MasterIV = "your-16-byte-static";
 
         public class EncryptedResult
         {
@@ -45,35 +43,32 @@ namespace OISPublic.Helper
                 EncryptedIV = Convert.ToBase64String(iv)
             };
         }
-        private static string EncryptInternal(string input)
+
+
+
+        public static string DecryptForPayloadData(string encryptedData, string encryptedKey, string encryptedIV)
         {
-            using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(MasterKey);
-            aes.IV = Encoding.UTF8.GetBytes(MasterIV);
+            if (string.IsNullOrEmpty(encryptedData) || string.IsNullOrEmpty(encryptedKey) || string.IsNullOrEmpty(encryptedIV))
+                throw new ArgumentException("Encrypted data, key, and IV must be provided.");
 
-            using var encryptor = aes.CreateEncryptor();
-            using var ms = new MemoryStream();
-            using var cs = new CryptoStream(ms, encryptor, CryptoStreamMode.Write);
-            using var sw = new StreamWriter(cs);
-            sw.Write(input);
-
-            return Convert.ToBase64String(ms.ToArray());
-        }
-
-        public static string DecryptInternal(string base64Input)
-        {
-            var buffer = Convert.FromBase64String(base64Input);
+            var cipherBytes = Convert.FromBase64String(encryptedData);
+            var keyBytes = Convert.FromBase64String(encryptedKey);
+            var ivBytes = Convert.FromBase64String(encryptedIV);
 
             using var aes = Aes.Create();
-            aes.Key = Encoding.UTF8.GetBytes(MasterKey);
-            aes.IV = Encoding.UTF8.GetBytes(MasterIV);
+            aes.KeySize = 256;
+            aes.BlockSize = 128;
+            aes.Mode = CipherMode.CBC;
+            aes.Padding = PaddingMode.PKCS7;
 
-            using var decryptor = aes.CreateDecryptor();
-            using var ms = new MemoryStream(buffer);
+            using var decryptor = aes.CreateDecryptor(keyBytes, ivBytes);
+            using var ms = new MemoryStream(cipherBytes);
             using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Read);
             using var sr = new StreamReader(cs);
 
             return sr.ReadToEnd();
         }
+
+
     }
 }

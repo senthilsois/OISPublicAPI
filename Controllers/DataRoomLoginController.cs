@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph.Models.ExternalConnectors;
+using Newtonsoft.Json;
 using OISPublic.Helper;
 using OISPublic.OISDataRoom;
 using OISPublic.OISDataRoomDto;
@@ -32,26 +33,40 @@ namespace OISPublic.OISDataRoom.Controllers
         }
 
 
-
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] EncryptedLoginRequest encryptedRequest)
         {
-            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+            if (string.IsNullOrWhiteSpace(encryptedRequest.EncryptedData) ||
+                string.IsNullOrWhiteSpace(encryptedRequest.EncryptedKey) ||
+                string.IsNullOrWhiteSpace(encryptedRequest.EncryptedIV))
             {
-                return BadRequest(new LoginResponse
-                {
-                    Success = false,
-                    Message = "Email and Password are required.",
-                    User = null
-                });
+                return BadRequest("Missing encrypted payload.");
             }
 
             try
             {
+                string decryptedJson = AesEncryptionHelper.DecryptForPayloadData(
+                    encryptedRequest.EncryptedData,
+                    encryptedRequest.EncryptedKey,
+                    encryptedRequest.EncryptedIV
+                );
+
+                var request = JsonConvert.DeserializeObject<LoginRequest>(decryptedJson);
+
+                if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                {
+                    return BadRequest(new LoginResponse
+                    {
+                        Success = false,
+                        Message = "Email and password are required.",
+                        User = null
+                    });
+                }
+
                 var user = await _context.DataRoomMasterUsers
-                    .FirstOrDefaultAsync(u => u.Email == request.Email &&
-                                              u.IsDeleted == false &&
-                                              u.IsExternal == request.IsExternal);
+               .FirstOrDefaultAsync(u => u.Email == request.Email &&
+                                         u.IsDeleted == false &&
+                                         u.IsExternal == request.IsExternal);
 
                 if (user == null)
                 {
@@ -68,13 +83,10 @@ namespace OISPublic.OISDataRoom.Controllers
                     return Unauthorized(new LoginResponse
                     {
                         Success = false,
-                        Message = "Password is incorrect.",
+                        Message = "Incorrect password.",
                         User = null
                     });
                 }
-
-
-
                 bool hasActiveDataRoom = await _context.DataRoomUsers
     .AnyAsync(du => du.UserId == user.Id && du.IsDeleted == false);
 
@@ -83,7 +95,7 @@ namespace OISPublic.OISDataRoom.Controllers
                     return Unauthorized(new LoginResponse
                     {
                         Success = false,
-                        Message = "No active DataRoom found for this user. Access denied.",
+                        Message = "No active DataRoom found for this user.",
                         User = null
                     });
                 }
@@ -93,27 +105,21 @@ namespace OISPublic.OISDataRoom.Controllers
                 if (isFirstLogin)
                 {
                     user.IsActive = true;
-                    user.CreatedAt = user.CreatedAt ?? DateTime.UtcNow;
+                    user.CreatedAt ??= DateTime.UtcNow;
                 }
 
                 var token = _jwtTokenService.GenerateJwtToken(user);
                 user.Token = token;
-           
+
                 _context.DataRoomMasterUsers.Update(user);
                 await _context.SaveChangesAsync();
 
                 if (isFirstLogin)
                 {
-                    var emailHelper = new CustomEmails();
-                    var emailBody = emailHelper.GenerateEmailBodyForFirstTimeLogin(user.Email);
-
-
-
-                    var smtp = await _context.EmailSmtpsettings
-    .FirstOrDefaultAsync(x => x.IsDeleted == true);
-
+                    var smtp = await _context.EmailSmtpsettings.FirstOrDefaultAsync(x => !x.IsDeleted);
                     if (smtp != null)
                     {
+                        var emailBody = new CustomEmails().GenerateEmailBodyForFirstTimeLogin(user.Email);
                         var spec = new SendEmailSpecification
                         {
                             FromAddress = smtp.UserName,
@@ -127,34 +133,35 @@ namespace OISPublic.OISDataRoom.Controllers
                             Password = smtp.Password,
                             Priority = "Normal"
                         };
-
                         await DataRoomEmailHelper.SendFromDataRoomEmailAsync(spec);
                     }
-
                 }
 
-
-
-
-
-                return Ok(new
+                var resultPayload = new
                 {
                     Success = true,
                     Message = "Login successful.",
                     Token = token,
                     User = user
-                });
+                };
+
+            
+                string responseJson = JsonConvert.SerializeObject(resultPayload);
+                var encryptedResponse = AesEncryptionHelper.EncryptWithRandomKey(responseJson);
+
+                return Ok(encryptedResponse);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, new LoginResponse
                 {
                     Success = false,
-                    Message = $"An error occurred while processing your request: {ex.Message}",
+                    Message = $"Server error: {ex.Message}",
                     User = null
                 });
             }
         }
+
 
 
     }

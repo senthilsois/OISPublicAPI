@@ -116,7 +116,8 @@ namespace OISPublic.Controllers
                     masterUser.IsActive,
                     masterUser.IsExternal,
                     masterUser.ClientId,
-                    masterUser.CompanyId
+                    masterUser.CompanyId,
+                    masterUser.ProfilePicturePath
                 },
                 CompanyNames = companyNames,
                 TotalDocuments = documents.Count(),      
@@ -154,46 +155,138 @@ namespace OISPublic.Controllers
         public class UpdatePasswordRequest
         {
             public Guid UserId { get; set; }
-            public string Name { get; set; } = string.Empty;
-            public string Email { get; set; } = string.Empty;
-            public string OldPassword { get; set; } = string.Empty;
-            public string NewPassword { get; set; } = string.Empty;
+            public string Email { get; set; } = "";
+            public string Name { get; set; } = "";
+            public string OldPassword { get; set; } = "";
+            public string? NewPassword { get; set; }
+            public string? ConfirmPassword { get; set; }
         }
 
 
-        [HttpPut("UpdateUserDetails")]
-        public async Task<IActionResult> UpdatePassword([FromBody] UpdatePasswordRequest request)
+        [HttpPost("UpdateUserDetails")]
+        public async Task<IActionResult> UpdatePasswordWithProfile([FromForm] UpdatePasswordRequest request)
         {
+            // Access profilePic directly from Request.Form.Files
+            var profilePic = Request.Form.Files["profilePicture"];
+
+            // Basic validation
             if (request.UserId == Guid.Empty ||
                 string.IsNullOrWhiteSpace(request.Email) ||
                 string.IsNullOrWhiteSpace(request.OldPassword) ||
-                string.IsNullOrWhiteSpace(request.NewPassword) ||
                 string.IsNullOrWhiteSpace(request.Name))
             {
-                return BadRequest("UserId, Email, OldPassword, and NewPassword are required.");
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "UserId, Email, OldPassword, and Name are required."
+                });
             }
 
+            // Find the user
             var user = await _context.DataRoomMasterUsers
                 .FirstOrDefaultAsync(x => x.Id == request.UserId && x.Email == request.Email && x.IsDeleted == false);
 
             if (user == null)
-                return NotFound("User not found or email does not match.");
+            {
+                return NotFound(new
+                {
+                    success = false,
+                    message = "User not found or email does not match."
+                });
+            }
 
+            // Validate old password
             if (user.Password != request.OldPassword)
-                return BadRequest("Old password does not match our records.");
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Old password does not match our records."
+                });
+            }
 
-            if (user.Password == request.NewPassword)
-                return BadRequest("New password must be different from the old password.");
+            // If new password is provided, validate and update
+            if (!string.IsNullOrWhiteSpace(request.NewPassword) || !string.IsNullOrWhiteSpace(request.ConfirmPassword))
+            {
+                if (string.IsNullOrWhiteSpace(request.NewPassword) || string.IsNullOrWhiteSpace(request.ConfirmPassword))
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = "Both new and confirm password are required to change password."
+                    });
+                }
 
-            // Update name and password
+                if (request.NewPassword != request.ConfirmPassword)
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = "New password and confirm password do not match."
+                    });
+                }
+
+                if (request.NewPassword == request.OldPassword)
+                {
+                    return BadRequest(new
+                    {
+                        success = false,
+                        message = "New password must be different from the old password."
+                    });
+                }
+
+                user.Password = request.NewPassword;
+            }
+
+          
             user.Name = request.Name;
-            user.Password = request.NewPassword;
+
+            if (profilePic != null && profilePic.Length > 0)
+            {
+                var storagePath = await _context.FileStorageSettings
+                    .Where(s => !s.IsDeleted)
+                    .Select(s => s.Path)
+                    .FirstOrDefaultAsync();
+
+                if (string.IsNullOrEmpty(storagePath))
+                {
+                    return NotFound(new
+                    {
+                        success = false,
+                        message = "Image storage path is not configured. Cannot save profile picture."
+                    });
+                }
+
+                if (!Directory.Exists(storagePath))
+                {
+                    Directory.CreateDirectory(storagePath);
+                }
+
+                var fileExtension = Path.GetExtension(profilePic.FileName);
+                var fileName = $"{request.UserId}{fileExtension}";
+                var fullPath = Path.Combine(storagePath, fileName);
+
+                using (var stream = new FileStream(fullPath, FileMode.Create))
+                {
+                    await profilePic.CopyToAsync(stream);
+                }
+
+                user.ProfilePicturePath = fullPath;
+            }
 
             _context.DataRoomMasterUsers.Update(user);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Password updated successfully." });
+            return Ok(new
+            {
+                success = true,
+                message = "User details updated successfully."
+            });
         }
+
+
+
+
 
         [HttpGet("UserNotification/{userId}")]
         public async Task<IActionResult> GetUserNotifications(Guid userId)

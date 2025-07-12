@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using OISPublic.Helper;
 using OISPublic.OISDataRoom;
 using OISPublic.Services;
 using System;
@@ -120,19 +122,38 @@ namespace OISPublic.Controllers
                     Permission = f.Permission
                 }).ToList();
 
-            return Ok(new
+
+            var result = new
             {
                 User = masterUser,
                 ActiveRooms = activeRooms,
                 ExpiredRooms = expiredRooms,
-                //UserRoomLinks = relatedUserRooms,
                 Permissions = new
                 {
                     DataRoomPermissions = dataRoomPermissions,
                     UserPermissions = userPermissions,
                     DocumentPermissions = documentPermissions
                 }
-            });
+            };
+
+            string json = JsonConvert.SerializeObject(result);
+            var encrypted = AesEncryptionHelper.EncryptWithRandomKey(json);
+
+            return Ok(encrypted);
+
+            //return Ok(new
+            //{
+            //    User = masterUser,
+            //    ActiveRooms = activeRooms,
+            //    ExpiredRooms = expiredRooms,
+            //    //UserRoomLinks = relatedUserRooms,
+            //    Permissions = new
+            //    {
+            //        DataRoomPermissions = dataRoomPermissions,
+            //        UserPermissions = userPermissions,
+            //        DocumentPermissions = documentPermissions
+            //    }
+            //});
         }
 
 
@@ -207,7 +228,24 @@ namespace OISPublic.Controllers
                                .FirstOrDefault()
        })
        .ToListAsync();
-            return Ok(new
+
+
+
+
+            //return Ok(new
+            //{
+            //    DataRoom = dataRoom,
+            //    Files = fileDetails,
+            //    Permission = new
+            //    {
+            //        UserPermission = userRoom.AccessLevel,
+            //        DataRoomPermission = dataRoom.DefaultPermission
+            //    },
+            //    AuditLogs = auditLogs
+            //});
+
+
+            var result = new
             {
                 DataRoom = dataRoom,
                 Files = fileDetails,
@@ -217,7 +255,15 @@ namespace OISPublic.Controllers
                     DataRoomPermission = dataRoom.DefaultPermission
                 },
                 AuditLogs = auditLogs
-            });
+            };
+
+
+
+
+            string json = JsonConvert.SerializeObject(result);
+            var encrypted = AesEncryptionHelper.EncryptWithRandomKey(json);
+
+            return Ok(encrypted);
         }
 
 
