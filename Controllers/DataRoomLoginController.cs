@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph.Models.ExternalConnectors;
 using Newtonsoft.Json;
 using OISPublic.Helper;
 using OISPublic.OISDataRoom;
@@ -17,13 +17,11 @@ namespace OISPublic.OISDataRoom.Controllers
     public class DataRoomLoginController : ControllerBase
     {
         private readonly OISDataRoomContext _context;
-
         private readonly JwtTokenService _jwtTokenService;
-
         private readonly IConfiguration _configuration;
 
-
-        public DataRoomLoginController(OISDataRoomContext context,
+        public DataRoomLoginController(
+            OISDataRoomContext context,
             IConfiguration configuration,
             JwtTokenService jwtTokenService)
         {
@@ -31,7 +29,6 @@ namespace OISPublic.OISDataRoom.Controllers
             _configuration = configuration;
             _jwtTokenService = jwtTokenService;
         }
-
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] EncryptedLoginRequest encryptedRequest)
@@ -51,7 +48,7 @@ namespace OISPublic.OISDataRoom.Controllers
                     encryptedRequest.EncryptedIV
                 );
 
-                var request = JsonConvert.DeserializeObject<LoginRequest>(decryptedJson);
+                var request = JsonConvert.DeserializeObject<OISPublic.OISDataRoomDto.LoginRequest>(decryptedJson);
 
                 if (request == null || string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
                 {
@@ -64,9 +61,9 @@ namespace OISPublic.OISDataRoom.Controllers
                 }
 
                 var user = await _context.DataRoomMasterUsers
-               .FirstOrDefaultAsync(u => u.Email == request.Email &&
-                                         u.IsDeleted == false &&
-                                         u.IsExternal == request.IsExternal);
+                    .FirstOrDefaultAsync(u => u.Email == request.Email &&
+                                              u.IsDeleted == false &&
+                                              u.IsExternal == request.IsExternal);
 
                 if (user == null)
                 {
@@ -87,8 +84,9 @@ namespace OISPublic.OISDataRoom.Controllers
                         User = null
                     });
                 }
+
                 bool hasActiveDataRoom = await _context.DataRoomUsers
-    .AnyAsync(du => du.UserId == user.Id && du.IsDeleted == false);
+                    .AnyAsync(du => du.UserId == user.Id && du.IsDeleted == false);
 
                 if (!hasActiveDataRoom)
                 {
@@ -145,7 +143,6 @@ namespace OISPublic.OISDataRoom.Controllers
                     User = user
                 };
 
-            
                 string responseJson = JsonConvert.SerializeObject(resultPayload);
                 var encryptedResponse = AesEncryptionHelper.EncryptWithRandomKey(responseJson);
 
@@ -162,7 +159,50 @@ namespace OISPublic.OISDataRoom.Controllers
             }
         }
 
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest model)
+        {
+            if (string.IsNullOrWhiteSpace(model.Email))
+            {
+                return BadRequest(new { Success = false, Message = "Email is required." });
+            }
 
+            var user = await _context.DataRoomMasterUsers
+                .FirstOrDefaultAsync(u => u.Email == model.Email && u.IsDeleted == false);
 
+            if (user == null)
+            {
+                return NotFound(new { Success = false, Message = "Email not found." });
+            }
+
+            var newPassword = PasswordGenerator.GenerateRandomPassword(10);
+            user.Password = newPassword;
+            user.CreatedAt = DateTime.UtcNow;
+
+            _context.DataRoomMasterUsers.Update(user);
+            await _context.SaveChangesAsync();
+
+            var smtp = await _context.EmailSmtpsettings.FirstOrDefaultAsync(x => !x.IsDeleted);
+            if (smtp != null)
+            {
+                var emailBody = new CustomEmails().GenerateEmailBodyForNewPassword(user.Email, newPassword);
+                var spec = new SendEmailSpecification
+                {
+                    FromAddress = smtp.UserName,
+                    ToAddress = user.Email,
+                    Subject = "Nexa Vault DataRoom - Password Reset",
+                    Body = emailBody,
+                    Host = smtp.Host,
+                    Port = smtp.Port,
+                    IsEnableSSL = smtp.IsEnableSsl,
+                    UserName = smtp.UserName,
+                    Password = smtp.Password,
+                    Priority = "Normal"
+                };
+                await DataRoomEmailHelper.SendFromDataRoomEmailAsync(spec);
+            }
+
+            return Ok(new { Success = true, Message = "A new password has been sent to your email." });
+        }
     }
 }
