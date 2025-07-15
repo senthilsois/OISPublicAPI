@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authorization;
 
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using OISPublic.OISDataRoomDto.DocumentUpload;
 
 
 
@@ -585,6 +586,94 @@ namespace OISPublic.Controllers
         }
 
 
+        [HttpPost("DeleteMultipleFromDataRoom")]
+        public async Task<IActionResult> DeleteMultipleDocumentsFromDataRoom([FromBody] DeleteMultipleRequest request)
+        {
+            if (request == null || request.DocumentIds == null || !request.DocumentIds.Any()
+                || request.DataRoomId == Guid.Empty || request.DeletedBy == Guid.Empty)
+            {
+                return BadRequest("Invalid input parameters.");
+            }
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
+            {
+                var dataRoom = await _context.DataRooms
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(dr => dr.Id == request.DataRoomId);
+
+                if (dataRoom == null)
+                {
+                    return NotFound("Data room not found.");
+                }
+
+                foreach (var docId in request.DocumentIds)
+                {
+                    var dataRoomFile = await _context.DataRoomFiles
+                        .FirstOrDefaultAsync(x => x.DocumentId == docId && x.DataRoomId == request.DataRoomId && !x.IsDeleted);
+
+                    if (dataRoomFile != null)
+                    {
+                        dataRoomFile.IsDeleted = true;
+                        dataRoomFile.DeletedBy = request.DeletedBy;
+                        dataRoomFile.DeletedDate = DateTime.UtcNow;
+                        _context.DataRoomFiles.Update(dataRoomFile);
+                    }
+
+                    var document = await _context.Documents
+                        .FirstOrDefaultAsync(d => d.Id == docId && !d.IsDeleted);
+
+                    string documentName = document?.Name ?? "";
+
+                    if (document != null)
+                    {
+                        document.IsDeleted = true;
+                        document.DeletedBy = request.DeletedBy;
+                        document.DeletedDate = DateTime.UtcNow;
+                        _context.Documents.Update(document);
+                    }
+
+                    var auditTrail = new DataRoomAuditTrial
+                    {
+                        Id = Guid.NewGuid(),
+                        DataRoomId = request.DataRoomId,
+                        Operation = (int)DataRoomOperation.DocumentDeleted,
+                        ActionName = DataRoomOperation.DocumentDeleted.ToString(),
+                        CreatedBy = request.DeletedBy,
+                        ModifiedBy = null,
+                        DataRoomName = dataRoom?.Name,
+                        DocumentName = documentName,
+                        CompanyId = dataRoom?.CompanyId,
+                        ClientId = dataRoom?.ClientId,
+                        CreatedDate = DateTime.UtcNow,
+                        ModifiedDate = DateTime.UtcNow,
+                        IsDeleted = false
+                    };
+
+                    await _context.DataRoomAuditTrials.AddAsync(auditTrail);
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return Ok(new
+                {
+                    success = true,
+                    message = "Documents deleted successfully.",
+                    statusCode = 200
+                });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
 
 
 
