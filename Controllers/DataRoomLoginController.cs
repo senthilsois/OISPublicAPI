@@ -42,6 +42,7 @@ namespace OISPublic.OISDataRoom.Controllers
 
             try
             {
+         
                 string decryptedJson = AesEncryptionHelper.DecryptForPayloadData(
                     encryptedRequest.EncryptedData,
                     encryptedRequest.EncryptedKey,
@@ -62,7 +63,7 @@ namespace OISPublic.OISDataRoom.Controllers
 
                 var user = await _context.DataRoomMasterUsers
                     .FirstOrDefaultAsync(u => u.Email == request.Email &&
-                                              u.IsDeleted == false &&
+                                              u.IsDeleted == false&&
                                               u.IsExternal == request.IsExternal);
 
                 if (user == null)
@@ -86,7 +87,7 @@ namespace OISPublic.OISDataRoom.Controllers
                 }
 
                 bool hasActiveDataRoom = await _context.DataRoomUsers
-                    .AnyAsync(du => du.UserId == user.Id && du.IsDeleted == false);
+                    .AnyAsync(du => du.UserId == user.Id && du.IsDeleted ==false);
 
                 if (!hasActiveDataRoom)
                 {
@@ -112,26 +113,34 @@ namespace OISPublic.OISDataRoom.Controllers
                 _context.DataRoomMasterUsers.Update(user);
                 await _context.SaveChangesAsync();
 
+             
                 if (isFirstLogin)
                 {
-                    var smtp = await _context.EmailSmtpsettings.FirstOrDefaultAsync(x => !x.IsDeleted);
-                    if (smtp != null)
+                    try
                     {
-                        var emailBody = new CustomEmails().GenerateEmailBodyForFirstTimeLogin(user.Email);
-                        var spec = new SendEmailSpecification
+                        var smtp = await _context.EmailSmtpsettings.FirstOrDefaultAsync(x => !x.IsDeleted && x.ClientId == user.ClientId && x.CompanyId == user.CompanyId);
+                        if (smtp != null)
                         {
-                            FromAddress = smtp.UserName,
-                            ToAddress = user.Email,
-                            Subject = "Welcome to Nexa Vault DataRoom",
-                            Body = emailBody,
-                            Host = smtp.Host,
-                            Port = smtp.Port,
-                            IsEnableSSL = smtp.IsEnableSsl,
-                            UserName = smtp.UserName,
-                            Password = smtp.Password,
-                            Priority = "Normal"
-                        };
-                        await DataRoomEmailHelper.SendFromDataRoomEmailAsync(spec);
+                            var emailBody = new CustomEmails().GenerateEmailBodyForFirstTimeLogin(user.Email);
+                            var spec = new SendEmailSpecification
+                            {
+                                FromAddress = smtp.UserName,
+                                ToAddress = user.Email,
+                                Subject = "Welcome to Nexa Vault DataRoom",
+                                Body = emailBody,
+                                Host = smtp.Host,
+                                Port = smtp.Port,
+                                IsEnableSSL = smtp.IsEnableSsl,
+                                UserName = smtp.UserName,
+                                Password = smtp.Password,
+                                Priority = "Normal"
+                            };
+                            await DataRoomEmailHelper.SendFromDataRoomEmailAsync(spec);
+                        }
+                    }
+                    catch (Exception)
+                    {
+                       
                     }
                 }
 
@@ -140,7 +149,15 @@ namespace OISPublic.OISDataRoom.Controllers
                     Success = true,
                     Message = "Login successful.",
                     Token = token,
-                    User = user
+                    User = new
+                    {
+                        user.Id,
+                        user.Email,
+                        user.Name,
+                        user.IsExternal,
+                        user.ClientId,
+                        user.CompanyId
+                    }
                 };
 
                 string responseJson = JsonConvert.SerializeObject(resultPayload);
@@ -150,14 +167,16 @@ namespace OISPublic.OISDataRoom.Controllers
             }
             catch (Exception ex)
             {
+    
                 return StatusCode(500, new LoginResponse
                 {
                     Success = false,
-                    Message = $"Server error: {ex.Message}",
+                    Message = "An unexpected error occurred during login.",
                     User = null
                 });
             }
         }
+
 
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest model)
@@ -168,22 +187,28 @@ namespace OISPublic.OISDataRoom.Controllers
             }
 
             var user = await _context.DataRoomMasterUsers
-                .FirstOrDefaultAsync(u => u.Email == model.Email && u.IsDeleted == false);
+                .FirstOrDefaultAsync(u => u.Email == model.Email && u.IsDeleted ==false);
 
             if (user == null)
             {
                 return NotFound(new { Success = false, Message = "Email not found." });
             }
 
+            var smtp = await _context.EmailSmtpsettings
+                .FirstOrDefaultAsync(x => !x.IsDeleted && x.ClientId == user.ClientId && x.CompanyId == user.CompanyId);
+
+            if (smtp == null)
+            {
+                return Ok(new
+                {
+                    Success = false,
+                    Message = "Password reset failed. SMTP settings not configured for your account."
+                });
+            }
+
             var newPassword = PasswordGenerator.GenerateRandomPassword(10);
-            user.Password = newPassword;
-            user.CreatedAt = DateTime.UtcNow;
 
-            _context.DataRoomMasterUsers.Update(user);
-            await _context.SaveChangesAsync();
-
-            var smtp = await _context.EmailSmtpsettings.FirstOrDefaultAsync(x => !x.IsDeleted);
-            if (smtp != null)
+            try
             {
                 var emailBody = new CustomEmails().GenerateEmailBodyForNewPassword(user.Email, newPassword);
                 var spec = new SendEmailSpecification
@@ -199,10 +224,30 @@ namespace OISPublic.OISDataRoom.Controllers
                     Password = smtp.Password,
                     Priority = "Normal"
                 };
-                await DataRoomEmailHelper.SendFromDataRoomEmailAsync(spec);
-            }
 
-            return Ok(new { Success = true, Message = "A new password has been sent to your email." });
+         
+                await DataRoomEmailHelper.SendFromDataRoomEmailAsync(spec);
+
+             
+                user.Password = newPassword;
+                user.CreatedAt = DateTime.UtcNow;
+
+                _context.DataRoomMasterUsers.Update(user);
+                await _context.SaveChangesAsync();
+
+                return Ok(new { Success = true, Message = "A new password has been sent to your email." });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new
+                {
+                    Success = false,
+                    Message = "Password reset failed while sending email.",
+                    Error = ex.Message
+                });
+            }
         }
+
+
     }
 }

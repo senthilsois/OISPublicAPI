@@ -30,7 +30,15 @@ builder.Services.AddDbContext<OISDataRoomContext>((serviceProvider, options) =>
     if (string.IsNullOrEmpty(connectionString))
         throw new InvalidOperationException("The ConnectionString property has not been initialized.");
 
-    options.UseSqlServer(connectionString);
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(10),
+            errorNumbersToAdd: null // or custom error numbers if needed
+        );
+    });
+
 });
 
 // JWT Authentication
@@ -74,7 +82,7 @@ builder.Services.AddScoped<JwtTokenService>();
 builder.Services.AddAuthorization();
 builder.Services.AddSingleton<PathHelper>();
 builder.Services.AddSignalR();
-builder.Services.AddHostedService<NotificationWatcherService>();
+//builder.Services.AddHostedService<NotificationWatcherService>();
 builder.Services.AddScoped<NotificationService>();
 
 var app = builder.Build();
